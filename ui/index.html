@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MinuteMate</title>
+</head>
+<body>
+  <h1>🎙️ MinuteMate</h1>
+  <p id="status">Status: <span style="color:red;">Idle</span></p>
+  <div id="content"></div>
+
+<script>
+setInterval(() => {
+  fetch('/status').then(r => r.json()).then(data => {
+    let color = data.state === 'recording' ? 'green' : 'red';
+    document.getElementById('status').innerHTML = `Status: <span style="color:${color}">${data.state}</span>`;
+    
+    if (data.state === 'idle') {
+      fetch('/minutes/1').then(r => r.json()).then(data => {
+        document.getElementById('content').innerHTML = `
+          <h3>📝 Summary</h3><p>${data.summary}</p>
+          <h3>✅ Action Items</h3><ul>${data.actions.map(x => `<li>${x}</li>`).join("")}</ul>
+          <h3>📅 Reminders</h3><ul>${data.reminders.map(x => `<li>${x}</li>`).join("")}</ul>
+        `;
+      });
+    }
+  });
+}, 3000);
+</script>
+</body>
+</html>

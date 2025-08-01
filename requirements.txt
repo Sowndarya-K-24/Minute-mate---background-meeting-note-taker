@@ -1,0 +1,6 @@
+flask
+sounddevice
+soundfile
+numpy
+openai-whisper
+spacy
